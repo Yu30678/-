@@ -29,14 +29,14 @@ graph TB
     
     %% 資料庫層
     subgraph Database_Layer["資料庫層"]
-        MainDB[("🗄️ .100.45<br/>主資料庫")]
+        MainDB[("🗄️ .100.45<br/>資料庫")]
     end
     
     %% 備援與儲存層
     subgraph Backup_Storage_Layer[" "]
         ActiveStandby1[("📀 .100.41<br/>active standby<br/>10G(目前2.9G)")]
         ActiveStandby2[("📀 .100.42<br/>active standby<br/>10G(目前2.9G)")]
-        Storage[("💾")]
+        Storage[("Storage")]
     end
     
     %% 用戶到網路層
