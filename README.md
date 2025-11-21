@@ -9,7 +9,7 @@ graph TB
     
     %% 前端層
     subgraph Frontend_Layer["前端層"]
-        Frontend[".118.81<br/>ap.ar frontend"]
+        Frontend[".118.81<br/>ap.ar.acc frontend"]
     end
     
     %% 應用層 - 合併成一個框
