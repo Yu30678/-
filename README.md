@@ -29,7 +29,7 @@ graph TB
     
     %% 資料庫層
     subgraph Database_Layer[" "]
-        MainDB[("🗄️ .100.45:1433<br/>資料庫")]
+        MainDB[("🗄️ 資料庫<br/>.100.45:1433")]
         Informix[("Informix<br/>".110.8:1531)]
         SunSystems[("SunSystems<br/>:1433")]
     end
