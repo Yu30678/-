@@ -8,28 +8,30 @@ graph TB
     Intranet["🌐 Intranet"]
     
     %% 前端層
-    subgraph Frontend_Layer["前端層"]
-        Frontend[".118.81<br/>ap.ar.acc frontend"]
+    subgraph Frontend_Layer[" "]
+        Frontend[".118.81:443<br/>ap.ar.acc frontend"]
     end
     
     %% 應用層 - 合併成一個框
     subgraph Application_Layer[" "]
-        Backend[".118.82<br/>ap.ar backend"]
-        HnraBackend[".118.83<br/>hnra / acc backend"]
-        IMS[".118.84<br/>IMS"]
-        SmartQuery[".118.87<br/>smart query"]
+        Backend[".118.82:443<br/>ap.ar backend"]
+        HnraBackend[".118.83:443<br/>hnra / acc backend"]
+        IMS[".118.84:443<br/>IMS"]
+        SmartQuery[".118.87:443<br/>smart query"]
     end
     
     %% 路由與服務層
     subgraph Router_Service_Layer[" "]
-        Router[".118.80<br/>router"]
-        Auth[".118.86<br/>auth"]
-        Shared[".118.85<br/>共用服務<br/>• job control<br/>• run job<br/>• mail<br/>• file<br/>• file export"]
+        Router[".118.80:443<br/>router"]
+        Auth[".118.86:443<br/>auth"]
+        Shared[".118.85:443<br/>共用服務<br/>• job control<br/>• run job<br/>• mail<br/>• file<br/>• file export"]
     end
     
     %% 資料庫層
-    subgraph Database_Layer["資料庫層"]
-        MainDB[("🗄️ .100.45<br/>資料庫")]
+    subgraph Database_Layer[" "]
+        MainDB[("🗄️ .100.45:1433<br/>資料庫")]
+        Informix[("Informix<br/>".110.8:1531)]
+        SunSystems[("SunSystems<br/>:1433")]
     end
     
     %% 備援與儲存層
@@ -44,31 +46,33 @@ graph TB
     Firewall --> Intranet
     
     %% Intranet 到各服務
-    Intranet -->|VM| Frontend
-    Intranet -->|VM| HnraBackend
-    Intranet -->|VM| IMS
-    Intranet -->|VM| SmartQuery
+    Intranet -->Frontend
+    Intranet -->HnraBackend
+    Intranet -->IMS
+    Intranet -->SmartQuery
     
     %% 前端與後端
-    Frontend <-->|VM| Backend
+    Frontend <-->Backend
     
     %% 應用層到 Router
-    Backend -->|VM| Router
-    HnraBackend -->|VM| Router
+    Backend <-->Router
+    HnraBackend <-->Router
     
     %% 服務層到 Router
-    Shared -->|VM| Router
-    Auth -->|VM| Router
+    Shared <-->Router
+    Auth <-->Router
     
     %% 應用層到資料庫
-    Backend -->|DB| MainDB
-    HnraBackend -->|DB| MainDB
-    IMS -->|DB| MainDB
-    SmartQuery -->|DB| MainDB
+    Backend <-->MainDB
+    Backend <-->Informix
+    HnraBackend <-->MainDB
+    IMS <-->MainDB
+    SmartQuery <-->MainDB
+    SmartQuery <-->Informix
     
     %% 服務層到資料庫
-    Auth -->|DB| MainDB
-    Shared -->|DB| MainDB
+    Auth <-->MainDB
+    Shared <-->MainDB
     
     %% 資料庫複製
     MainDB --> ActiveStandby1
@@ -92,7 +96,7 @@ graph TB
     class Frontend,Backend,HnraBackend,IMS,SmartQuery vmStyle
     class Router routerStyle
     class Auth,Shared serviceStyle
-    class MainDB,ActiveStandby1,ActiveStandby2,Storage dbStyle
+    class MainDB,Informix,SunSystems,ActiveStandby1,ActiveStandby2,Storage dbStyle
     
     %% 子圖樣式
     style Frontend_Layer fill:#ecf0f1,stroke:#95a5a6,stroke-width:2px,stroke-dasharray: 5 5
