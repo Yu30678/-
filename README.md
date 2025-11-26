@@ -29,16 +29,16 @@ graph TB
     
     %% 資料庫層
     subgraph Database_Layer[" "]
-        MainDB[("🗄️ 資料庫<br/>.100.45:1433")]
-        Informix[("🗄️ Informix<br/>.110.8:1531")]
-        SunSystems[("🗄️ SunSystems<br/>:1433")]
+        MainDB[(" 資料庫<br/>.100.45:1433")]
+        Informix[(" Informix<br/>.110.8:1531")]
+        SunSystems[(" SunSystems<br/>:1433")]
     end
     
     %% 備援與儲存層
     subgraph Backup_Storage_Layer[" "]
-        ActiveStandby1[("📀 .100.41<br/>active standby<br/>10G(目前2.9G)")]
-        ActiveStandby2[("📀 .100.42<br/>active standby<br/>10G(目前2.9G)")]
-        Storage[("💾 Storage")]
+        ActiveStandby1[(" .100.41<br/>active standby<br/>10G(目前2.9G)")]
+        ActiveStandby2[(" .100.42<br/>active standby<br/>10G(目前2.9G)")]
+        Storage[(" Storage")]
     end
     
     %% 用戶到網路層 - 加粗主要路徑
