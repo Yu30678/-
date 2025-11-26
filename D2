@@ -1,0 +1,211 @@
+direction: down
+
+vars: {
+  d2-config: {
+    layout-engine: elk
+    pad: 80
+  }
+}
+
+# 樣式類別
+classes: {
+  user: {
+    style: {
+      fill: "#34495e"
+      stroke: "#2c3e50"
+      font-color: "#ffffff"
+      stroke-width: 3
+    }
+  }
+  network: {
+    style: {
+      fill: "#f39c12"
+      stroke: "#e67e22"
+      font-color: "#ffffff"
+      stroke-width: 2
+    }
+  }
+  vm: {
+    style: {
+      fill: "#2c3e50"
+      stroke: "#34495e"
+      font-color: "#ffffff"
+      stroke-width: 2
+    }
+  }
+  router: {
+    style: {
+      fill: "#e74c3c"
+      stroke: "#c0392b"
+      font-color: "#ffffff"
+      stroke-width: 2
+    }
+  }
+  service: {
+    style: {
+      fill: "#9b59b6"
+      stroke: "#8e44ad"
+      font-color: "#ffffff"
+      stroke-width: 2
+    }
+  }
+  db: {
+    style: {
+      fill: "#3498db"
+      stroke: "#2980b9"
+      font-color: "#ffffff"
+      stroke-width: 2
+    }
+  }
+  storage: {
+    style: {
+      fill: "#27ae60"
+      stroke: "#229954"
+      font-color: "#ffffff"
+      stroke-width: 2
+    }
+  }
+}
+
+# 節點
+User: "USER" {
+  class: user
+}
+
+Firewall: "Firewall" {
+  class: network
+}
+
+Intranet: "Intranet" {
+  class: network
+}
+
+Frontend_Layer: {
+  label: ""
+  style.fill: "#ecf0f1"
+  style.stroke: "#95a5a6"
+
+  Frontend: ".118.81:443\nap.ar.acc frontend" {
+    class: vm
+  }
+}
+
+Application_Layer: {
+  label: ""
+  style.fill: "#ecf0f1"
+  style.stroke: "#95a5a6"
+
+  Backend: ".118.82:443\nap.ar backend" {
+    class: vm
+  }
+
+  HnraBackend: ".118.83:443\nhnra / acc backend" {
+    class: vm
+  }
+
+  IMS: ".118.84:443\nIMS" {
+    class: vm
+  }
+
+  SmartQuery: ".118.87:443\nsmart query" {
+    class: vm
+  }
+}
+
+Router_Service_Layer: {
+  label: ""
+  style.fill: "#fadbd8"
+  style.stroke: "#e74c3c"
+
+  Shared: ".118.85:443\n共用服務\njob control\nrun job\nmail\nfile\nfile export" {
+    class: service
+  }
+
+  Router: ".118.80:443\nrouter" {
+    class: router
+  }
+
+  Auth: ".118.86:443\nauth" {
+    class: service
+  }
+}
+
+Database_Layer: {
+  label: ""
+  style.fill: "#d6eaf8"
+  style.stroke: "#3498db"
+
+  MainDB: ".100.45:1433\n資料庫" {
+    class: db
+    shape: cylinder
+  }
+
+  Informix: ".110.8:1531\nInformix" {
+    class: db
+    shape: cylinder
+  }
+
+  SunSystems: ":1433\nSunSystems" {
+    class: db
+    shape: cylinder
+  }
+}
+
+Backup_Storage_Layer: {
+  label: ""
+  style.fill: "#d5f4e6"
+  style.stroke: "#27ae60"
+
+  Standby1: ".100.41\nactive standby\n10G(目前2.9G)" {
+    class: storage
+    shape: cylinder
+  }
+
+  Standby2: ".100.42\nactive standby\n10G(目前2.9G)" {
+    class: storage
+    shape: cylinder
+  }
+
+  Storage: "Storage" {
+    class: storage
+    shape: cylinder
+  }
+}
+
+# 連接
+User -> Firewall
+Firewall -> Intranet
+
+Intranet -> Frontend_Layer.Frontend
+Intranet -> Application_Layer.HnraBackend
+Intranet -> Application_Layer.IMS
+Intranet -> Application_Layer.SmartQuery
+
+Frontend_Layer.Frontend <-> Application_Layer.Backend
+
+Application_Layer.Backend <-> Router_Service_Layer.Router
+Application_Layer.HnraBackend <-> Router_Service_Layer.Router
+Router_Service_Layer.Shared <-> Router_Service_Layer.Router
+Router_Service_Layer.Auth <-> Router_Service_Layer.Router
+
+Application_Layer.Backend <-> Database_Layer.MainDB
+Application_Layer.Backend <-> Database_Layer.Informix
+Application_Layer.Backend <-> Database_Layer.SunSystems
+Application_Layer.HnraBackend <-> Database_Layer.MainDB
+Application_Layer.HnraBackend <-> Database_Layer.SunSystems
+Application_Layer.IMS <-> Database_Layer.MainDB
+Application_Layer.IMS <-> Database_Layer.SunSystems
+Application_Layer.SmartQuery <-> Database_Layer.MainDB
+Application_Layer.SmartQuery <-> Database_Layer.Informix
+Router_Service_Layer.Auth <-> Database_Layer.MainDB
+Router_Service_Layer.Shared <-> Database_Layer.MainDB
+
+Database_Layer.MainDB -> Backup_Storage_Layer.Standby1
+Database_Layer.MainDB -> Backup_Storage_Layer.Standby2
+
+Backup_Storage_Layer.Standby1 -> Backup_Storage_Layer.Storage: {
+  style.stroke-dash: 5
+}
+Backup_Storage_Layer.Standby2 -> Backup_Storage_Layer.Storage: {
+  style.stroke-dash: 5
+}
