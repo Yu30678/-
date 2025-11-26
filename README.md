@@ -29,9 +29,9 @@ graph TB
     
     %% 資料庫層
     subgraph Database_Layer[" "]
-        MainDB[(" 資料庫<br/>.100.45:1433")]
-        Informix[(" Informix<br/>.110.8:1531")]
-        SunSystems[(" SunSystems<br/>:1433")]
+        MainDB[(" .100.45:1433<br/>資料庫")]
+        Informix[(" .110.8:1531<br/>Informix")]
+        SunSystems[(" :1433<br/>SunSystems")]
     end
     
     %% 備援與儲存層
